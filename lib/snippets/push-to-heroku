@@ -11,8 +11,8 @@ function yellow() {
 }
 
 HEROKU_APP=$1
-STATUS=`env PATH="/app/bin" vendor/heroku-toolbelt/bin/heroku`
-HEROKU_RELEASES=`heroku releases --app $HEROKU_APP 2>&1`
+STATUS=`/app/vendor/heroku-toolbelt/bin/heroku`
+HEROKU_RELEASES=`/app/vendor/heroku-toolbelt/bin/heroku releases --app $HEROKU_APP 2>&1`
 GIT_COMMAND=${GIT_COMMAND:="git push git@heroku.com:$HEROKU_APP.git $SHA:master $GIT_FLAGS"}
 POST_MIGRATION_DEPLOY=${POST_MIGRATION_DEPLOY:="true"}
 
@@ -46,29 +46,29 @@ if [[ $? -ne 0 ]]; then
   exit 1;
 fi
 
-MIGRATION_STATUS=`heroku run rake db:migrate:status --app $HEROKU_APP | grep -e '^\s*down'`
+MIGRATION_STATUS=`/app/vendor/heroku-toolbelt/bin/heroku run rake db:migrate:status --app $HEROKU_APP | grep -e '^\s*down'`
 
 if [[ "${MIGRATION_STATUS}" != "" ]]; then
   green "There are pending migrations to apply:"
   echo $MIGRATION_STATUS
 
   green "Migrating database."
-  heroku run rake db:migrate --app $HEROKU_APP
+  /app/vendor/heroku-toolbelt/bin/heroku run rake db:migrate --app $HEROKU_APP
 
-  POST_MIGRATION_STATUS=`heroku run rake db:migrate:status --app $HEROKU_APP | grep -e '^\s*down'`
+  POST_MIGRATION_STATUS=`/app/vendor/heroku-toolbelt/bin/heroku run rake db:migrate:status --app $HEROKU_APP | grep -e '^\s*down'`
   if [[ "${POST_MIGRATION_STATUS}" != "" ]]; then
     red "Migration failed! This is bad."
     red "Please contact a heroku collaborator for ${HEROKU_APP}:"
-    heroku sharing --app $HEROKU_APP
+    /app/vendor/heroku-toolbelt/bin/heroku sharing --app $HEROKU_APP
     red "The app ${HEROKU_APP} will now be reverted to its last working version ${HEROKU_LAST_GOOD_RELEASE}."
-    heroku releases:rollback $HEROKU_LAST_GOOD_RELEASE --app $HEROKU_APP
+    /app/vendor/heroku-toolbelt/bin/heroku releases:rollback $HEROKU_LAST_GOOD_RELEASE --app $HEROKU_APP
     red "Abort."
     exit 1
   fi
 
   if [[ "${POST_MIGRATION_DEPLOY}" == "true" ]]; then
     green "Post-migration dyno restart."
-    heroku restart --app $HEROKU_APP
+    /app/vendor/heroku-toolbelt/bin/heroku restart --app $HEROKU_APP
   fi
 else
   green "There are no pending migrations."
