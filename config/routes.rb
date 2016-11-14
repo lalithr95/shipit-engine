@@ -35,6 +35,7 @@ Shipit::Engine.routes.draw do
         resource :output, only: :show
       end
       resources :deploys, only: %i(create)
+      resources :commits, only: %i(index)
       post '/task/:task_name' => 'tasks#trigger', as: :trigger_task
       resources :hooks, only: %i(index create show update destroy)
     end
@@ -83,6 +84,7 @@ Shipit::Engine.routes.draw do
       get ':sha', sha: sha_format, on: :new, action: :new, as: ''
       member do
         get :rollback
+        get :revert
       end
     end
   end

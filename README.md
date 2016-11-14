@@ -20,7 +20,7 @@ This guide aims to help you [set up](#installation-and-setup), [use](#using-ship
 
 * [Installation](#installation)
 * [Configuring shipit.yml and secrets.yml](#configuring-ymls)
-* [Updating and existing installation](#updating-shipit)
+* [Updating an existing installation](#updating-shipit)
 
 **II. USING SHIPIT**
 
@@ -45,8 +45,8 @@ This guide aims to help you [set up](#installation-and-setup), [use](#using-ship
 
 Shipit provides you with a Rails template. To bootstrap your Shipit installation:
 
-1. If you don't have Rails installed, run this command: `gem install rails -v 4.2.6`
-2. Run this command:  `rails _4.2.6_ new shipit -m https://raw.githubusercontent.com/Shopify/shipit-engine/master/template.rb`
+1. If you don't have Rails installed, run this command: `gem install rails -v 5.0.0.1`
+2. Run this command:  `rails _5.0.0.1_ new shipit --skip-action-cable --skip-turbolinks --skip-action-mailer -m https://raw.githubusercontent.com/Shopify/shipit-engine/master/template.rb`
 3. Enter your **Client ID**, **Client Secret**, and **GitHub API access token** when prompted. These can be found on your application's GitHub page.
 4. To setup the database, run this command: `rake db:setup`
 
@@ -551,6 +551,7 @@ Your deploy scripts have access to the following environment variables:
 * `ENVIRONMENT`: The stack environment (e.g `production` / `staging`)
 * `BRANCH`: The stack branch (e.g `master`)
 * `LAST_DEPLOYED_SHA`: The git SHA of the last deployed commit
+* `DIFF_LINK`: URL to the diff on GitHub.
 * All the content of the `secrets.yml` `env` key
 * All the content of the `shipit.yml` `machine.environment` key
 
